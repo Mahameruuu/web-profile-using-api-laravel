@@ -3,33 +3,71 @@
 @section('title', 'Login')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="mb-4">Login</h2>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="mb-4 text-center">Login</h2>
 
-            @if(session('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
+        {{-- Pesan error umum --}}
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
 
-            <form method="POST" action="{{ route('login.submit') }}">
-                @csrf
-                <div class="mb-3">
-                    <label>Email</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
+        {{-- Pesan sukses --}}
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
 
-                <div class="mb-3">
-                    <label>Password</label>
-                    <input type="password" name="password" class="form-control" required>
-                </div>
+        {{-- Validasi error --}}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-                <p class="mt-3">
-                    Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
-                </p>
+        {{-- Form Login --}}
+        <form method="POST" action="{{ route('login.submit') }}">
+            @csrf
 
+            {{-- Email --}}
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    id="email" 
+                    class="form-control" 
+                    required 
+                    value="{{ old('email') }}"
+                >
+            </div>
+
+            {{-- Password --}}
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    id="password" 
+                    class="form-control" 
+                    required
+                >
+            </div>
+
+            {{-- Lupa password --}}
+            <div class="mb-3 text-end">
+                <a href="{{ route('password.request') }}">Lupa password?</a>
+            </div>
+
+            {{-- Tombol Aksi --}}
+            <div class="d-flex justify-content-between align-items-center">
                 <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-
-        </div>
+                <a href="{{ route('register') }}" class="btn btn-link">Daftar</a>
+            </div>
+        </form>
     </div>
+</div>
 @endsection

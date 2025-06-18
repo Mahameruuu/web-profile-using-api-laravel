@@ -53,6 +53,21 @@ class AuthController extends Controller
         ]);
     }
 
+    public function resetPasswordByAdmin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|string|min:8|confirmed'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return back()->with('success', 'Password berhasil direset.');
+    }
+
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
