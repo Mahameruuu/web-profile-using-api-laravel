@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api'; 
 
 const Index = () => {
   const [kegiatan, setKegiatan] = useState([]);
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/kegiatan');
+      const res = await api.get('/kegiatan'); 
       setKegiatan(res.data);
     } catch (error) {
       console.error('Gagal memuat data kegiatan', error);
@@ -16,8 +16,12 @@ const Index = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm('Yakin ingin menghapus kegiatan ini?')) {
-      await axios.delete(`http://localhost:8000/api/kegiatan/${id}`);
-      fetchData();
+      try {
+        await api.delete(`/kegiatan/${id}`); 
+        fetchData();
+      } catch (error) {
+        console.error('Gagal menghapus', error);
+      }
     }
   };
 
@@ -51,7 +55,7 @@ const Index = () => {
               <td className="p-2 border">
                 {item.gambar && (
                   <img
-                    src={`http://localhost:8000/storage/public/${item.gambar}`}
+                    src={`http://localhost:8000/storage/kegiatan/${item.gambar}`}
                     alt={item.judul}
                     className="w-16 h-16 object-cover"
                   />

@@ -16,7 +16,7 @@ function Register() {
     e.preventDefault();
     setErrors([]);
     try {
-      await api.post('/api/register', form);
+      await api.post('/register', form);
       alert('Registrasi berhasil, silakan login');
       navigate('/login');
     } catch (err) {

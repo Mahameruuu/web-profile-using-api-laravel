@@ -14,7 +14,7 @@ function Login() {
     e.preventDefault();
     setErrors(null);
     try {
-      const res = await api.post('/api/login', { email, password });
+      const res = await api.post('/login', { email, password });
       localStorage.setItem('token', res.data.token);
       setSuccess('Login berhasil!');
       navigate('/dashboard');
