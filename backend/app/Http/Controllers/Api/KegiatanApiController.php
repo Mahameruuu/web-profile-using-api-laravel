@@ -28,25 +28,19 @@ class KegiatanApiController extends Controller
         }
 
         $data = $request->validate([
-            'judul' => 'required',
-            'deskripsi' => 'required',
+            'judul' => 'required|string',
+            'deskripsi' => 'required|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         if ($request->hasFile('gambar')) {
-            $file = $request->file('gambar');
-            $filename = $file->hashName(); // nama file unik
-
-            // Simpan ke storage lokal dan publik
-            $file->storeAs('kegiatan_local', $filename, 'local');
-            $file->storeAs('kegiatan', $filename, 'public');
-
-            $data['gambar'] = $filename;
+            $data['gambar'] = $request->file('gambar')->store('kegiatan', 'public');
         }
 
         $kegiatan = Kegiatan::create($data);
         return response()->json($kegiatan, 201);
     }
+
 
     public function update(Request $request, $id)
     {
@@ -58,29 +52,23 @@ class KegiatanApiController extends Controller
         $kegiatan = Kegiatan::findOrFail($id);
 
         $data = $request->validate([
-            'judul' => 'sometimes|required',
-            'deskripsi' => 'sometimes|required',
+            'judul' => 'sometimes|required|string',
+            'deskripsi' => 'sometimes|required|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         if ($request->hasFile('gambar')) {
             if ($kegiatan->gambar) {
-                Storage::disk('local')->delete('kegiatan_local/' . $kegiatan->gambar);
-                Storage::disk('public')->delete('kegiatan/' . $kegiatan->gambar);
+                Storage::disk('public')->delete($kegiatan->gambar);
             }
 
-            $file = $request->file('gambar');
-            $filename = $file->hashName();
-
-            $file->storeAs('kegiatan_local', $filename, 'local');
-            $file->storeAs('kegiatan', $filename, 'public');
-
-            $data['gambar'] = $filename;
+            $data['gambar'] = $request->file('gambar')->store('kegiatan', 'public');
         }
 
         $kegiatan->update($data);
         return response()->json($kegiatan);
     }
+
 
     public function destroy($id)
     {
@@ -92,11 +80,11 @@ class KegiatanApiController extends Controller
         $kegiatan = Kegiatan::findOrFail($id);
 
         if ($kegiatan->gambar) {
-            Storage::disk('local')->delete('kegiatan_local/' . $kegiatan->gambar);
-            Storage::disk('public')->delete('kegiatan/' . $kegiatan->gambar);
+            Storage::disk('public')->delete($kegiatan->gambar);
         }
 
         $kegiatan->delete();
         return response()->json(['message' => 'Kegiatan berhasil dihapus.']);
     }
+
 }
