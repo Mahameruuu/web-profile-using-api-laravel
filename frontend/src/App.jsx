@@ -2,20 +2,21 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import axios from 'axios';
 
+// Public Pages
+import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
-import Dashboard from './pages/Dashboard';
 
+// Protected Pages
+import Dashboard from './pages/Dashboard';
 import KegiatanIndex from './pages/kegiatan/Index';
 import KegiatanForm from './pages/kegiatan/Form';
-
 import UserIndex from './pages/user/index';
 import UserForm from './pages/user/edit';
 import UserImport from './pages/user/import';
-
-import InputIndex from './pages/input/Index';   
-import InputForm from './pages/input/Form';     
+import InputIndex from './pages/input/Index';
+import InputForm from './pages/input/Form';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -39,6 +40,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* ✅ Landing Page untuk User */}
+        <Route path="/" element={<LandingPage />} />
+
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -58,7 +62,7 @@ function App() {
         <Route path="/users/edit/:id" element={<ProtectedRoute><UserForm /></ProtectedRoute>} />
         <Route path="/users/import" element={<ProtectedRoute><UserImport /></ProtectedRoute>} />
 
-        {/* ✅ Manajemen Input */}
+        {/* Inputs */}
         <Route path="/inputs" element={<ProtectedRoute><InputIndex /></ProtectedRoute>} />
         <Route path="/inputs/create" element={<ProtectedRoute><InputForm /></ProtectedRoute>} />
       </Routes>
