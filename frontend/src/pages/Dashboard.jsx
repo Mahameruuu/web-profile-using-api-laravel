@@ -1,52 +1,106 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
+import api from '../api';
 
 function Dashboard() {
+  const [summary, setSummary] = useState({
+    users: 0,
+    kegiatan: 0,
+    fitur: 0,
+    user_items: [],
+    kegiatan_items: [],
+    fitur_items: [],
+  });
+
+  const [bulanIni, setBulanIni] = useState('');
+  const [baruBulanIni, setBaruBulanIni] = useState({
+    users: 0,
+    kegiatan: 0,
+    fitur: 0,
+  });
+
+  useEffect(() => {
+    const fetchSummary = async () => {
+      try {
+        const response = await api.get('/dashboard-summary');
+        const data = response.data;
+
+        const now = new Date();
+        const bulan = now.toLocaleString('default', { month: 'long' });
+        const tahun = now.getFullYear();
+        setBulanIni(`${bulan} ${tahun}`);
+
+        const isThisMonth = (dateStr) => {
+          const date = new Date(dateStr);
+          return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+        };
+
+        setBaruBulanIni({
+          users: data.user_items.filter(item => isThisMonth(item.created_at)).length,
+          kegiatan: data.kegiatan_items.filter(item => isThisMonth(item.created_at)).length,
+          fitur: data.fitur_items.filter(item => isThisMonth(item.created_at)).length,
+        });
+
+        setSummary(data);
+      } catch (error) {
+        console.error('Gagal fetch summary:', error);
+      }
+    };
+
+    fetchSummary();
+  }, []);
+
   return (
     <DashboardLayout title="Dashboard Admin">
       <h2 className="mb-4 fw-bold text-dark">Selamat Datang, Admin!</h2>
 
       <div className="row">
-        {/* Card 1 */}
+        {/* Card: Jumlah User */}
         <div className="col-xl-3 col-sm-6 mb-4">
           <div className="card shadow border-0">
             <div className="card-body">
-              <p className="text-uppercase text-muted mb-1">Today's Money</p>
-              <h5>$53,000</h5>
-              <p className="mb-0 text-success">+55% <small>since yesterday</small></p>
+              <p className="text-uppercase text-muted mb-1">Jumlah User</p>
+              <h5>{summary.users.toLocaleString()}</h5>
+              <p className="mb-0 text-success">
+                +{baruBulanIni.users} <small>ditambahkan {bulanIni}</small>
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Card 2 */}
+        {/* Card: Jumlah Kegiatan */}
         <div className="col-xl-3 col-sm-6 mb-4">
           <div className="card shadow border-0">
             <div className="card-body">
-              <p className="text-uppercase text-muted mb-1">Today's Users</p>
-              <h5>2,300</h5>
-              <p className="mb-0 text-success">+3% <small>since last week</small></p>
+              <p className="text-uppercase text-muted mb-1">Jumlah Kegiatan</p>
+              <h5>{summary.kegiatan}</h5>
+              <p className="mb-0 text-primary">
+                +{baruBulanIni.kegiatan} <small>ditambahkan {bulanIni}</small>
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Card 3 */}
+        {/* Card: Jumlah Fitur */}
         <div className="col-xl-3 col-sm-6 mb-4">
           <div className="card shadow border-0">
             <div className="card-body">
-              <p className="text-uppercase text-muted mb-1">New Clients</p>
-              <h5>3,462</h5>
-              <p className="mb-0 text-danger">-2% <small>since last quarter</small></p>
+              <p className="text-uppercase text-muted mb-1">Jumlah Fitur</p>
+              <h5>{summary.fitur}</h5>
+              <p className="mb-0 text-warning">
+                +{baruBulanIni.fitur} <small>ditambahkan {bulanIni}</small>
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Card 4 */}
+        {/* Card kosong */}
         <div className="col-xl-3 col-sm-6 mb-4">
           <div className="card shadow border-0">
             <div className="card-body">
-              <p className="text-uppercase text-muted mb-1">Sales</p>
-              <h5>$103,430</h5>
-              <p className="mb-0 text-success">+5% <small>than last month</small></p>
+              <p className="text-uppercase text-muted mb-1">Informasi Lain</p>
+              <h5>Coming Soon</h5>
+              <p className="mb-0 text-muted"><small>Sedang disiapkan</small></p>
             </div>
           </div>
         </div>

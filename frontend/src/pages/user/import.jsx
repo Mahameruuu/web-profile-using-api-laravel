@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
+import DashboardLayout from '../../components/DashboardLayout'; 
 
 function UserImport() {
   const [file, setFile] = useState(null);
@@ -27,15 +28,30 @@ function UserImport() {
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Import User dari Excel</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <input type="file" accept=".xls,.xlsx" onChange={(e) => setFile(e.target.files[0])} className="form-control" required />
+    <DashboardLayout title="Import User">
+      <div className="p-6 max-w-xl mx-auto">
+        <div className="bg-white shadow rounded p-6">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Import User dari Excel</h2>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <input
+                type="file"
+                accept=".xls,.xlsx"
+                onChange={(e) => setFile(e.target.files[0])}
+                className="w-full border px-3 py-2 rounded file:bg-gray-100 file:border-none file:px-3 file:py-1"
+                required
+              />
+            </div>
+            <div>
+              <button className="btn mt-4 btn-primary">
+                Upload
+              </button>
+            </div>
+          </form>
         </div>
-        <button className="btn btn-primary">Upload</button>
-      </form>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }
 

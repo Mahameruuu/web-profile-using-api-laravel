@@ -33,46 +33,59 @@ function Register() {
     <Layout title="Register">
       <div className="row justify-content-center">
         <div className="col-md-6">
-          <h2 className="mb-4">Register</h2>
+          <div className="card shadow p-4">
+            <h2 className="mb-4 text-center">Register</h2>
 
-          {errors.length > 0 && (
-            <div className="alert alert-danger">
-              <ul className="mb-0">
-                {errors.map((err, idx) => <li key={idx}>{err}</li>)}
-              </ul>
-            </div>
-          )}
+            {errors.length > 0 && (
+              <div className="alert alert-danger">
+                <ul className="mb-0">
+                  {errors.map((err, idx) => <li key={idx}>{err}</li>)}
+                </ul>
+              </div>
+            )}
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label>Nama</label>
-              <input className="form-control" name="name" onChange={handleChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Email</label>
-              <input className="form-control" type="email" name="email" onChange={handleChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Password</label>
-              <input className="form-control" type="password" name="password" onChange={handleChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Konfirmasi Password</label>
-              <input className="form-control" type="password" name="password_confirmation" onChange={handleChange} required />
-            </div>
-            <div className="mb-3">
-              <label>Role</label>
-              <select className="form-control" name="role" onChange={handleChange} required>
-                <option value="">Pilih Role</option>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-              </select>
-            </div>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label className="form-label">Nama</label>
+                <input className="form-control" name="name" onChange={handleChange} required />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Email</label>
+                <input type="email" className="form-control" name="email" onChange={handleChange} required />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Password</label>
+                <input type="password" className="form-control" name="password" onChange={handleChange} required />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Konfirmasi Password</label>
+                <input type="password" className="form-control" name="password_confirmation" onChange={handleChange} required />
+              </div>
+              <div className="mb-4">
+                <label className="form-label">Role</label>
+                <select className="form-control" name="role" onChange={handleChange} required>
+                  <option value="">Pilih Role</option>
+                  <option value="admin">Admin</option>
+                  <option value="user">User</option>
+                </select>
+              </div>
 
-            <p className="mt-3">Sudah punya akun? <Link to="/login">Login di sini</Link></p>
+              <div className="mb-3 text-end">
+                <span className="small">
+                  Sudah punya akun?{' '}
+                  <Link to="/login" className="text-primary fw-semibold text-decoration-none">
+                    Login di sini
+                  </Link>
+                </span>
+              </div>
 
-            <button type="submit" className="btn btn-primary">Register</button>
-          </form>
+              <div className="d-grid">
+                <button type="submit" className="btn btn-primary">
+                  Register
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </Layout>

@@ -74,4 +74,24 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Logout berhasil']);
     }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'User tidak ditemukan.'], 404);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return response()->json(['message' => 'Password berhasil direset.']);
+    }
+
 }
