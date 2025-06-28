@@ -47,7 +47,6 @@ const Sidebar = () => {
         <button
           onClick={handleOpen}
           className="fixed top-4 left-4 z-50 p-2"
-
         >
           <i className="fas fa-bars text-slate-700"></i>
         </button>
@@ -117,6 +116,16 @@ const Sidebar = () => {
                   <i className={iconClass('text-orange-500 ni ni-settings')}></i>
                 </div>
                 <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">Manajemen Input</span>
+              </Link>
+            </li>
+
+            {/* ✅ Menu Baru: Surat Cuti */}
+            <li className="mt-0.5 w-full">
+              <Link to="/cuti" className={menuClass('/cuti')}>
+                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center text-center xl:p-2.5">
+                  <i className={iconClass('text-red-500 ni ni-archive-2')}></i>
+                </div>
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">Surat Cuti</span>
               </Link>
             </li>
           </ul>

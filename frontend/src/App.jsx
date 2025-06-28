@@ -18,6 +18,10 @@ import UserImport from './pages/user/import';
 import InputIndex from './pages/input/Index';
 import InputForm from './pages/input/Form';
 
+// 📄 Surat Cuti Pages
+import CutiIndex from './pages/cuti/Index';
+import CutiForm from './pages/cuti/Create';
+
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -65,6 +69,10 @@ function App() {
         {/* Inputs */}
         <Route path="/inputs" element={<ProtectedRoute><InputIndex /></ProtectedRoute>} />
         <Route path="/inputs/create" element={<ProtectedRoute><InputForm /></ProtectedRoute>} />
+
+        {/* 📄 Surat Cuti */}
+        <Route path="/cuti" element={<ProtectedRoute><CutiIndex /></ProtectedRoute>} />
+        <Route path="/cuti/create" element={<ProtectedRoute><CutiForm /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
