@@ -126,7 +126,6 @@ class CutiController extends Controller
             $pdf = Pdf::loadView('pdf.surat_cuti', compact('cuti'))->setPaper('A4');
             Storage::put("public/surat_cuti/{$fileName}", $pdf->output());
 
-            // Hapus file lama jika ada
             if ($cuti->file_pdf && Storage::exists('public/surat_cuti/' . $cuti->file_pdf)) {
                 Storage::delete('public/surat_cuti/' . $cuti->file_pdf);
             }

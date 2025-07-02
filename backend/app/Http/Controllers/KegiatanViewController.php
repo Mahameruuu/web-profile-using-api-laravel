@@ -4,23 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class KegiatanViewController extends Controller
 {
     public function index()
     {
-        $kegiatan = Kegiatan::all();
-        return view('kegiatan.index', compact('kegiatan'));
+        $kegiatans = Kegiatan::all();
+        return view('kegiatan.index', compact('kegiatans'));
     }
 
     public function create()
     {
+        if (!Auth::user() || Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized');
+        }
+        
         return view('kegiatan.create');
     }
 
     public function store(Request $request)
     {
+        if (!Auth::user() || Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized');
+        }
+
         $data = $request->validate([
             'judul' => 'required',
             'deskripsi' => 'required',
@@ -41,12 +50,20 @@ class KegiatanViewController extends Controller
 
     public function edit($id)
     {
+        if (!Auth::user() || Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized');
+        }
+
         $kegiatan = Kegiatan::findOrFail($id);
         return view('kegiatan.edit', compact('kegiatan'));
     }
 
     public function update(Request $request, $id)
     {
+        if (!Auth::user() || Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized');
+        }
+
         $kegiatan = Kegiatan::findOrFail($id);
 
         $data = $request->validate([
@@ -74,6 +91,10 @@ class KegiatanViewController extends Controller
 
     public function destroy($id)
     {
+        if (!Auth::user() || Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized');
+        }
+
         $kegiatan = Kegiatan::findOrFail($id);
 
         if ($kegiatan->gambar) {

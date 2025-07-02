@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../api';
+import DashboardLayout from '../../components/DashboardLayout';
 
 const CutiIndex = () => {
   const [cutis, setCutis] = useState([]);
@@ -35,79 +36,91 @@ const CutiIndex = () => {
   }, []);
 
   return (
-    <div className="container mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Data Surat Cuti</h4>
-        <Link to="/cuti/create" className="btn btn-primary">+ Tambah Cuti</Link>
-      </div>
+    <DashboardLayout title="Data Surat Cuti">
+      <div className="p-6 max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">Manajemen Surat Cuti</h2>
+          <Link
+            to="/cuti/create"
+            className="btn btn-primary"
+          >
+            + Tambah Cuti
+          </Link>
+        </div>
 
-      {loading ? (
-        <div>Memuat data...</div>
-      ) : (
-        <table className="table table-bordered table-striped">
-          <thead className="table-dark">
-            <tr>
-              <th>No</th>
-              <th>Nama</th>
-              <th>NIP</th>
-              <th>Tgl Mulai</th>
-              <th>Tgl Akhir</th>
-              <th>Jumlah</th>
-              <th>Status</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cutis.length > 0 ? (
-              cutis.map((cuti, index) => (
-                <tr key={cuti.id}>
-                  <td>{index + 1}</td>
-                  <td>{cuti.nama}</td>
-                  <td>{cuti.nip}</td>
-                  <td>{cuti.tanggal_mulai}</td>
-                  <td>{cuti.tanggal_akhir}</td>
-                  <td>{cuti.jumlah_hari} hari</td>
-                  <td>
-                    <span className={`badge bg-${
-                      cuti.status === 'Disetujui' ? 'success' :
-                      cuti.status === 'Ditolak' ? 'danger' : 'warning'
-                    }`}>
-                      {cuti.status}
-                    </span>
-                  </td>
-                  <td>
-                    {cuti.file_pdf ? (
-                      <a
-                        href={`http://localhost:8000/storage/surat_cuti/${cuti.file_pdf}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="btn btn-sm btn-success"
-                      >
-                        📄 PDF
-                      </a>
-                    ) : (
-                      <span className="text-muted">Tidak ada file</span>
-                    )}
-
-                    {/* Tombol Hapus (aktifkan jika kamu admin) */}
-                    <button
-                      onClick={() => handleDelete(cuti.id)}
-                      className="btn btn-sm btn-danger ms-1"
-                    >
-                      🗑 Hapus
-                    </button>
-                  </td>
+        <div className="overflow-x-auto bg-white rounded shadow">
+          {loading ? (
+            <div className="p-4 text-center text-gray-500">Memuat data...</div>
+          ) : (
+            <table className="w-full table-auto text-sm">
+              <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+                <tr>
+                  <th className="px-4 py-3 text-left">No</th>
+                  <th className="px-4 py-3 text-left">Nama</th>
+                  <th className="px-4 py-3 text-left">NIP</th>
+                  <th className="px-4 py-3 text-left">Tgl Mulai</th>
+                  <th className="px-4 py-3 text-left">Tgl Akhir</th>
+                  <th className="px-4 py-3 text-left">Jumlah</th>
+                  <th className="px-4 py-3 text-left">Status</th>
+                  <th className="px-4 py-3 text-left">Aksi</th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="8" className="text-center">Tidak ada data</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      )}
-    </div>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {cutis.length > 0 ? (
+                  cutis.map((cuti, index) => (
+                    <tr key={cuti.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-2">{index + 1}</td>
+                      <td className="px-4 py-2">{cuti.nama}</td>
+                      <td className="px-4 py-2">{cuti.nip}</td>
+                      <td className="px-4 py-2">{cuti.tanggal_mulai}</td>
+                      <td className="px-4 py-2">{cuti.tanggal_akhir}</td>
+                      <td className="px-4 py-2">{cuti.jumlah_hari} hari</td>
+                      <td className="px-4 py-2">
+                        <span className={`px-2 py-1 text-xs rounded font-medium ${
+                          cuti.status === 'Disetujui'
+                            ? 'bg-green-100 text-green-700'
+                            : cuti.status === 'Ditolak'
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-yellow-100 text-yellow-700'
+                        }`}>
+                          {cuti.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 space-x-1">
+                        {cuti.file_pdf ? (
+                          <a
+                            href={`http://localhost:8000/storage/surat_cuti/${cuti.file_pdf}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn btn-sm btn-success"
+                          >
+                            📄 PDF
+                          </a>
+                        ) : (
+                          <span className="text-muted text-xs">Tidak ada file</span>
+                        )}
+                        <button
+                          onClick={() => handleDelete(cuti.id)}
+                          className="btn btn-sm btn-danger"
+                        >
+                          🗑 Hapus
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="8" className="text-center py-6 text-gray-500">
+                      Tidak ada data cuti.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

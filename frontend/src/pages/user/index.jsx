@@ -24,6 +24,7 @@ function UserIndex() {
     getUsers();
   }, []);
 
+  // Filtering Role
   const filteredUsers = users.filter((u) => {
     const matchesSearch = u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase());
     const matchesRole = roleFilter ? u.role === roleFilter : true;

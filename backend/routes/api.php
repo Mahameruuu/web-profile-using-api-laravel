@@ -60,7 +60,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('cutis')->group(function () {
         Route::get('/', [CutiController::class, 'index']);
         Route::post('/', [CutiController::class, 'store']);
-        Route::get('/{id}/pdf', [CutiController::class, 'downloadPdf']); // ⚠️ Didefinisikan dulu sebelum show
+        Route::get('/{id}/pdf', [CutiController::class, 'downloadPdf']);
         Route::get('/{id}', [CutiController::class, 'show']);
         Route::put('/{id}', [CutiController::class, 'update']);
         Route::delete('/{id}', [CutiController::class, 'destroy']);

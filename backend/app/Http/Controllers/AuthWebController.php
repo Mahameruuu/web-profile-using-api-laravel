@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class AuthWebController extends Controller
 {
@@ -16,20 +16,17 @@ class AuthWebController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->withErrors(['login' => 'Email atau password salah']);
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->route('dashboard');
         }
 
-        // Simpan user ke dalam session
-        session(['user' => $user]);
-        return redirect('/dashboard');
+        return back()->withErrors(['login' => 'Email atau password salah']);
     }
 
     public function showRegisterForm()
@@ -43,7 +40,7 @@ class AuthWebController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:admin,user',
+            'role' => 'required|in:admin,user',
         ]);
 
         $user = User::create([
@@ -53,15 +50,20 @@ class AuthWebController extends Controller
             'role' => $request->role,
         ]);
 
-        // Simpan user ke session setelah register
-        session(['user' => $user]);
-        return redirect('/login');
+        // Setelah registrasi, bisa langsung login
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        return redirect()->route('dashboard');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        session()->forget('user');
-        return redirect('/login');
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 
     public function showForgotPasswordForm()
@@ -81,8 +83,6 @@ class AuthWebController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('login')->with('success', 'Password berhasil direset. Silakan login.');
+        return redirect()->route('login')->with('success', 'Password berhasil direset.');
     }
-
-
 }

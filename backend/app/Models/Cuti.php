@@ -22,6 +22,7 @@ class Cuti extends Model
         'file_pdf',
     ];
 
+    // opsional atau cara ke 2
     protected $casts = [
         'tanggal_pengajuan' => 'date',
         'tanggal_mulai' => 'date',
