@@ -131,6 +131,6 @@ C. React (SPA)
 Aplikasi ini menunjukkan implementasi multi frontend (SSR dan SPA) yang saling terhubung ke satu backend Laravel. Penggunaan dynamic form dan import Excel menambah fleksibilitas manajemen data user, serta membiasakan developer dengan konsep API + SPA terpisah.
 
 ## 11. Kontak
-Nama: M. Mahameru. A
-Email: mahameru0504@email.com
-GitHub: https://github.com/Mahameruuu
+- Nama: M. Mahameru. A
+- Email: mahameru0504@email.com
+- GitHub: https://github.com/Mahameruuu
