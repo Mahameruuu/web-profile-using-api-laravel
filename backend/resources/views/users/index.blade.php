@@ -16,7 +16,6 @@
     </div>
   </div>
 
-
   {{-- Search & Filter --}}
   <form method="GET" class="row g-2 align-items-center mb-4">
     <div class="col-sm-5">
@@ -43,7 +42,6 @@
       </button>
     </div>
   </form>
-
 
   {{-- Table --}}
   <div class="overflow-auto bg-white rounded-lg shadow">
