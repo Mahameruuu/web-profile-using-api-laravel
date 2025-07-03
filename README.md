@@ -132,5 +132,5 @@ Aplikasi ini menunjukkan implementasi multi frontend (SSR dan SPA) yang saling t
 
 ## 11. Kontak
 - Nama: M. Mahameru. A
-- Email: mahameru0504@email.com
+- Email: mahameru0504@gmail.com
 - GitHub: https://github.com/Mahameruuu
