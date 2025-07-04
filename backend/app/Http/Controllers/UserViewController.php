@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\DynamicInput;
 use App\Imports\UsersImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +17,10 @@ class UserViewController extends Controller
         $role = $request->role;
 
         $users = User::query()
-            ->when($search, fn($q) => $q->where('name', 'like', "%$search%")->orWhere('email', 'like', "%$search%"))
+            ->when($search, fn($q) =>
+                $q->where('name', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+            )
             ->when($role, fn($q) => $q->where('role', $role))
             ->orderBy('name')
             ->get();
@@ -26,20 +30,37 @@ class UserViewController extends Controller
 
     public function create()
     {
-        return view('users.create');
+        $dynamicInputs = DynamicInput::where('active', true)->get();
+        return view('users.create', compact('dynamicInputs'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
-            'role' => 'nullable'
+        $request->validate([
+            'name'            => 'required',
+            'email'           => 'required|email|unique:users',
+            'password'        => 'required',
+            'role'            => 'nullable',
+            'dynamic_fields'  => 'nullable|array'
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
-        User::create($validated);
+        $data = $request->only(['name', 'email', 'role']);
+        $data['password'] = Hash::make($request->password);
+
+        // Ambil field dinamis yang aktif
+        $activeFields = DynamicInput::where('active', true)->pluck('name')->toArray();
+        $submittedFields = $request->input('dynamic_fields', []);
+
+        $filteredFields = array_filter(
+            $submittedFields,
+            fn($value, $key) => in_array($key, $activeFields),
+            ARRAY_FILTER_USE_BOTH
+        );
+
+        // Simpan ke kolom extra_data
+        $data['extra_data'] = json_encode($filteredFields);
+
+        User::create($data);
 
         return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan.');
     }
@@ -54,20 +75,35 @@ class UserViewController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id,
+        $request->validate([
+            'name'     => 'required',
+            'email'    => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable',
-            'role' => 'nullable'
+            'role'     => 'nullable',
+            'dynamic_fields' => 'nullable|array'
         ]);
 
+        $data = $request->only(['name', 'email', 'role']);
+
         if ($request->password) {
-            $validated['password'] = Hash::make($request->password);
-        } else {
-            unset($validated['password']);
+            $data['password'] = Hash::make($request->password);
         }
 
-        $user->update($validated);
+        // Update extra_data jika dynamic fields dikirim
+        if ($request->has('dynamic_fields')) {
+            $activeFields = DynamicInput::where('active', true)->pluck('name')->toArray();
+            $submittedFields = $request->input('dynamic_fields', []);
+
+            $filteredFields = array_filter(
+                $submittedFields,
+                fn($value, $key) => in_array($key, $activeFields),
+                ARRAY_FILTER_USE_BOTH
+            );
+
+            $data['extra_data'] = json_encode($filteredFields);
+        }
+
+        $user->update($data);
 
         return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
     }

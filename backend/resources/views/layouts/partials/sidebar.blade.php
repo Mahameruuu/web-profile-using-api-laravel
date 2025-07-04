@@ -54,7 +54,7 @@
 
       {{-- Manajemen Input --}}
       <li class="mt-0.5 w-full">
-        <a href="#" class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold transition-colors duration-200
+        <a href="{{ route('dynamic-inputs.index') }}" class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold transition-colors duration-200
           {{ request()->routeIs('inputs.*') ? 'bg-blue-500/13 text-slate-700 dark:text-white dark:opacity-80' : 'text-slate-700 hover:bg-gray-100 dark:text-white dark:opacity-80' }}">
           <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center text-center xl:p-2.5">
             <i class="text-orange-500 ni ni-settings"></i>

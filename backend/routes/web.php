@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\UserViewController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserViewController;
 use App\Http\Controllers\KegiatanViewController;
 use App\Http\Controllers\AuthWebController;
+use App\Http\Controllers\DynamicInputController; // Tambahkan ini
 
 // Halaman utama
 Route::get('/', [KegiatanViewController::class, 'index'])->name('home');
@@ -19,11 +20,12 @@ Route::get('/logout', [AuthWebController::class, 'logout'])->name('logout');
 Route::get('/reset-password', [AuthWebController::class, 'showForgotPasswordForm'])->name('password.request');
 Route::post('/reset-password', [AuthWebController::class, 'resetPassword'])->name('password.update');
 
-// Dashboard 
+// Dashboard
 Route::get('/dashboard', function () {
     return view('dashboard', ['user' => Auth::user()]);
 })->middleware('auth')->name('dashboard');
 
+// Grup route untuk user yang sudah login
 Route::middleware(['auth'])->group(function () {
     // Kegiatan
     Route::get('/kegiatan', [KegiatanViewController::class, 'index'])->name('kegiatan.index');
@@ -44,4 +46,13 @@ Route::middleware(['auth'])->group(function () {
     // Import Excel
     Route::get('/users/import', [UserViewController::class, 'showImportForm'])->name('users.import.form');
     Route::post('/users/import', [UserViewController::class, 'import'])->name('users.import');
+
+    // Dynamic Inputs (CRUD)
+    Route::get('/dynamic-inputs', [DynamicInputController::class, 'index'])->name('dynamic-inputs.index');
+    Route::get('/dynamic-inputs/create', [DynamicInputController::class, 'create'])->name('dynamic-inputs.create');
+    Route::post('/dynamic-inputs', [DynamicInputController::class, 'store'])->name('dynamic-inputs.store');
+    Route::get('/dynamic-inputs/{id}', [DynamicInputController::class, 'show'])->name('dynamic-inputs.show'); // opsional
+    Route::get('/dynamic-inputs/{id}/edit', [DynamicInputController::class, 'edit'])->name('dynamic-inputs.edit');
+    Route::put('/dynamic-inputs/{id}', [DynamicInputController::class, 'update'])->name('dynamic-inputs.update');
+    Route::delete('/dynamic-inputs/{id}', [DynamicInputController::class, 'destroy'])->name('dynamic-inputs.destroy');
 });

@@ -52,7 +52,7 @@
       </div>
 
       {{-- Dynamic Fields --}}
-      @if(isset($dynamicInputs))
+      @if(isset($dynamicInputs) && count($dynamicInputs))
         <hr>
         <h5 class="mb-3 font-semibold text-gray-700">Data Tambahan</h5>
 
