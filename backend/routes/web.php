@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserViewController;
 use App\Http\Controllers\KegiatanViewController;
 use App\Http\Controllers\AuthWebController;
-use App\Http\Controllers\DynamicInputController; // Tambahkan ini
+use App\Http\Controllers\DynamicInputController;
+use App\Http\Controllers\CutiController; // ✅ Tambahkan Controller Cuti
 
 // Halaman utama
 Route::get('/', [KegiatanViewController::class, 'index'])->name('home');
@@ -55,4 +56,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dynamic-inputs/{id}/edit', [DynamicInputController::class, 'edit'])->name('dynamic-inputs.edit');
     Route::put('/dynamic-inputs/{id}', [DynamicInputController::class, 'update'])->name('dynamic-inputs.update');
     Route::delete('/dynamic-inputs/{id}', [DynamicInputController::class, 'destroy'])->name('dynamic-inputs.destroy');
+
+    // Cuti Routes (Surat Cuti)
+    Route::get('/cuti', [CutiController::class, 'index'])->name('cuti.index');
+    Route::get('/cuti/create', [CutiController::class, 'create'])->name('cuti.create');
+    Route::post('/cuti', [CutiController::class, 'store'])->name('cuti.store');
+    Route::get('/cuti/{id}', [CutiController::class, 'show'])->name('cuti.show');
+    Route::get('/cuti/{id}/edit', [CutiController::class, 'edit'])->name('cuti.edit');
+    Route::put('/cuti/{id}', [CutiController::class, 'update'])->name('cuti.update');
+    Route::delete('/cuti/{id}', [CutiController::class, 'destroy'])->name('cuti.destroy');
+
+    // PDF routes
+    Route::get('/cuti/{id}/download', [CutiController::class, 'downloadPdf'])->name('cuti.download');
+    Route::post('/cuti/{id}/regenerate-pdf', [CutiController::class, 'regeneratePdf'])->name('cuti.regeneratePdf');
 });
